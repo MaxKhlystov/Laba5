@@ -1,3 +1,5 @@
+package max;
+
 import java.util.Random;
 
 public class LightTank extends Tank {
@@ -11,7 +13,11 @@ public class LightTank extends Tank {
     }
 
     public int getViewRange(){
-        return this.viewRange;
+        return viewRange;
+    }
+
+    public void setViewRange(int viewRange){
+        this.viewRange = viewRange;
     }
 
     public void useAbility(){

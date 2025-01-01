@@ -1,3 +1,5 @@
+package max;
+
 public abstract class Tank {
     private String name;
     private int HP;

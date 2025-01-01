@@ -1,3 +1,5 @@
+package max;
+
 import java.util.Random;
 
 public class HeavyTank extends Tank {
@@ -12,6 +14,10 @@ public class HeavyTank extends Tank {
 
     public int getArmorThickness(){
         return this.armorThickness;
+    }
+
+    public void setArmorThickness(int armorThickness){
+        this.armorThickness = armorThickness;
     }
 
     public void useAbility(){
