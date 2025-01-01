@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.*;
 
+import max.Battlefield;
 import max.MyTableModel;
 
 public class MainWindow extends JFrame {
@@ -10,7 +11,7 @@ public class MainWindow extends JFrame {
         super("Наши танки");
 
         jTable = new JTable();
-        jTable.setModel(new MyTableModel());
+        jTable.setModel(new MyTableModel(new Battlefield()));
         this.add(jTable);
         this.pack();
         this.setLocationRelativeTo(null);//расположение посередине

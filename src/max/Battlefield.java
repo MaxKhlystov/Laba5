@@ -40,4 +40,12 @@ public class Battlefield {
                     .forEach(System.out::println);
         }
     }
+
+    public int getCount(){
+        return  this.tanks.size();
+    }
+
+    public Tank getTank(int index) {
+        return tanks.get(index);
+    }
 }
