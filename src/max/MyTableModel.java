@@ -14,7 +14,18 @@ public class MyTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 4;
+    }
+
+    @Override
+    public String getColumnName(int column){
+        switch (column){
+            case 0: return "Название";
+            case 1: return "Прочность";
+            case 2: return "Дальность обзора";
+            case 3: return "Толщина брони";
+        }
+        return "";
     }
 
     @Override
@@ -26,11 +37,20 @@ public class MyTableModel extends AbstractTableModel {
                     Tank tank = data.getTank(rowIndex);
                     if(tank instanceof LightTank) {
                         return ((LightTank) tank).getViewRange();
-                    }else{
-                        return ((HeavyTank) tank).getArmorThickness();
-                    }
+                    }else return "-";
+            }
+            case 3:{
+                Tank tank = data.getTank(rowIndex);
+                if (tank instanceof HeavyTank){
+                    return ((HeavyTank) tank).getArmorThickness();
+                }else return "-";
             }
         }
-        return "dsvvsvsdv";
+        return "default";
+    }
+
+    public void deleteTank(int index){
+        this.data.remove(index);
+        fireTableDataChanged();
     }
 }
