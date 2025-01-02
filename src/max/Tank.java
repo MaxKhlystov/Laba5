@@ -16,5 +16,14 @@ public abstract class Tank {
     public int getHPTank() {
         return this.HP;
     }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setHPTank(int HP){
+        this.HP = HP;
+    }
+
     public abstract void useAbility();
 }

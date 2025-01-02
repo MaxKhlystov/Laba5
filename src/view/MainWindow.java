@@ -20,6 +20,7 @@ public class MainWindow extends JFrame {
         jTable.setModel(myTableModel);
         JScrollPane jScrollPane = new JScrollPane(jTable);
         buttonDelete = new JButton("Удалить танк");
+        buttonDelete.setSize(30, 30);
         buttonDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

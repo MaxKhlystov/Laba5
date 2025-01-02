@@ -29,6 +29,29 @@ public class MyTableModel extends AbstractTableModel {
     }
 
     @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return String.class;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        switch(columnIndex){
+            case 0: data.getTank(rowIndex).setName((String)aValue);
+        }
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        switch(columnIndex){
+            case 0: return true;
+            case 1: return true;
+            case 2: return true;
+            case 3: return true;
+        }
+        return false;
+    }
+
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex){
             case 0: return data.getTank(rowIndex).getName();
