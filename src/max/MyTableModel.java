@@ -30,13 +30,20 @@ public class MyTableModel extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return String.class;
+        switch(columnIndex){
+            case 0: return String.class;
+            case 1: return int.class;
+            case 2: return int.class;
+            case 3: return int.class;
+        }
+        return int.class;
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         switch(columnIndex){
             case 0: data.getTank(rowIndex).setName((String)aValue);
+            case 1: data.getTank(rowIndex).setHPTank((int)aValue);
         }
     }
 
