@@ -21,7 +21,6 @@ public class WindowAbility extends JFrame {
         buttonUseAbility.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                myTableModelAbility.fireTableStructureChanged();
                 myTableModelAbility.useAbilityTanks();
             }
         });

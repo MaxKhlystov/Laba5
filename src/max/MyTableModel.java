@@ -83,4 +83,14 @@ public class MyTableModel extends AbstractTableModel {
         this.data.remove(index);
         fireTableDataChanged();
     }
+
+    public void addLightTank(){
+        data.addTank(new LightTank("ам13105", 1300, 1000));
+        fireTableDataChanged();
+    }
+
+    public void addHeavyTank(){
+        data.addTank(new HeavyTank("Е100", 2700, 500));
+        fireTableDataChanged();
+    }
 }

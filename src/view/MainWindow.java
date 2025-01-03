@@ -17,6 +17,9 @@ public class MainWindow extends JFrame {
     private JButton buttonYes;
     private JButton buttonNo;
     private JButton buttonAbility;
+    private JButton buttonAd;
+    private JButton buttonHeavyTank;
+    private JButton buttonLightTank;
     public MainWindow(){
         super("Наши танки");
         myTableModel = new MyTableModel(new Battlefield());
@@ -24,13 +27,49 @@ public class MainWindow extends JFrame {
         jTable.setModel(myTableModel);
         JScrollPane jScrollPane = new JScrollPane(jTable);
         JPanel buttonPanelMain = new JPanel();
+        buttonAd = new JButton("Добавить танк");
+        buttonAd.setSize(30,30);
+        buttonAd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog jDialog = new JDialog(MainWindow.this,"Выбор танка", true);
+                jDialog.setSize(400, 200);
+                jDialog.setLocationRelativeTo(MainWindow.this);
+                buttonHeavyTank = new JButton("Тяжёлый танк");
+                buttonLightTank = new JButton("Лёгкий танк");
+                JPanel messageChoice = new JPanel();
+                JPanel buttonPanelChoice = new JPanel();
+                messageChoice.add(new JLabel("Какой танк вы хотите добавить?"));
+
+                buttonHeavyTank.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        myTableModel.addHeavyTank();
+                        jDialog.dispose();
+                    }
+                });
+
+                buttonLightTank.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        myTableModel.addLightTank();
+                        jDialog.dispose();
+                    }
+                });
+
+                buttonPanelChoice.add(buttonHeavyTank);
+                buttonPanelChoice.add(buttonLightTank);
+                jDialog.add(messageChoice, BorderLayout.CENTER);
+                jDialog.add(buttonPanelChoice, BorderLayout.SOUTH);
+                jDialog.setVisible(true);
+            }
+        });
         buttonAbility = new JButton("Возможности танков");
         buttonAbility.setSize(30, 30);
         buttonAbility.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new WindowAbility();
-                //fireTableDataChanged();
             }
         });
 
@@ -94,6 +133,7 @@ public class MainWindow extends JFrame {
         });
         buttonPanelMain.add(buttonDelete);
         buttonPanelMain.add(buttonAbility);
+        buttonPanelMain.add(buttonAd);
         this.add(buttonPanelMain, BorderLayout.SOUTH);//расположение кнопки внизу
         this.add(jScrollPane);//крутить таблицу
         this.pack();
