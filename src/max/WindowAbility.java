@@ -9,9 +9,11 @@ import java.awt.event.*;
 public class WindowAbility extends JFrame {
     private JTable jTable;//отображает данные, но не хранит
     private TableModelAbility myTableModelAbility;
+    private JTextField fileNameField;
     private JButton buttonUseAbility;
     private JButton buttonYes;
     private JButton buttonNo;
+
     public WindowAbility(){
         super("Результаты использования возможностей");
         myTableModelAbility = new TableModelAbility(new Battlefield());
@@ -32,7 +34,7 @@ public class WindowAbility extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
-                JDialog saveDialog = new JDialog(WindowAbility.this, "Сохранение данных", true);
+                JDialog saveDialog = new JDialog(WindowAbility.this, "Подтверждение", true);
                 saveDialog.setSize(300, 100);
                 saveDialog.setLocationRelativeTo(WindowAbility.this);
                 JPanel writeData = new JPanel();
@@ -40,16 +42,28 @@ public class WindowAbility extends JFrame {
                 JPanel buttonWriteData = new JPanel();
                 buttonYes = new JButton("Да");
                 buttonNo = new JButton("Нет");
+
                 buttonYes.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("Сохранение");
+                        JDialog jDialogSave = new JDialog(WindowAbility.this, "Сохранение данных", true);
+                        jDialogSave.setLocationRelativeTo(WindowAbility.this);
+                        jDialogSave.setSize(300, 100);
+                        jDialogSave.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+                        JPanel fileNamePanel = new JPanel();
+                        fileNamePanel.add(new JLabel("Имя файла для сохранения: "));
+                        fileNameField = new JTextField(20);
+                        fileNamePanel.add(fileNameField);
+                        jDialogSave.add(fileNamePanel);
+                        String fileName = fileNameField.getText();
+                        jDialogSave.setVisible(true);
+                        saveDialog.dispose();
+                        dispose();
                     }
                 });
                 buttonNo.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("Выход");
                         saveDialog.dispose();
                     }
                 });

@@ -1,7 +1,5 @@
 package max;
 
-import javafx.scene.control.Tab;
-
 import javax.swing.table.AbstractTableModel;
 
 public class TableModelAbility extends AbstractTableModel {

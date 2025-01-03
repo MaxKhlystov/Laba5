@@ -4,6 +4,7 @@ import javax.swing.table.AbstractTableModel;
 
 public class MyTableModel extends AbstractTableModel {
     private Battlefield data;
+
     public MyTableModel(Battlefield field){
         this.data = field;
     }

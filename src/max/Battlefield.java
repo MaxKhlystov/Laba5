@@ -14,7 +14,6 @@ public class Battlefield {
         this.tanks.add(new HeavyTank("ис8", 1800, 300));
         this.tanks.add(new HeavyTank("кв4", 1600, 250));
         this.tanks.add(new HeavyTank("ис3", 1500, 200));
-
     }
 
     public void addTank(Tank tank) {
