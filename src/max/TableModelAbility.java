@@ -1,11 +1,14 @@
 package max;
 
+import javafx.scene.control.Tab;
+
 import javax.swing.table.AbstractTableModel;
 
-public class MyTableModel extends AbstractTableModel {
+public class TableModelAbility extends AbstractTableModel {
     private Battlefield data;
-    public MyTableModel(Battlefield field){
-        this.data = field;
+
+    public TableModelAbility(Battlefield field){
+        this.data=field;
     }
     @Override
     public int getRowCount() {
@@ -21,12 +24,13 @@ public class MyTableModel extends AbstractTableModel {
     public String getColumnName(int column){
         switch (column){
             case 0: return "Название";
-            case 1: return "Прочность";
-            case 2: return "Дальность обзора";
-            case 3: return "Толщина брони";
+            case 1: return "Кол-во обнаруженных противников";
+            case 2: return "Кол-во непробитий";
+            case 3: return "Кол-во пробитий";
         }
         return "";
     }
+
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
@@ -43,7 +47,6 @@ public class MyTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         switch(columnIndex){
             case 0: data.getTank(rowIndex).setName((String)aValue);
-            //case 1: data.getTank(rowIndex).setHPTank((int)aValue);
         }
     }
 
@@ -58,29 +61,33 @@ public class MyTableModel extends AbstractTableModel {
         return false;
     }
 
-    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex){
             case 0: return data.getTank(rowIndex).getName();
-            case 1: return data.getTank(rowIndex).getHPTank();
+            case 1: {
+                Tank tank = data.getTank(rowIndex);
+                if(tank instanceof LightTank) {
+                    return ((LightTank) tank).getNumberDetectedEnemies();
+                }else return "-";
+            }
             case 2: {
-                    Tank tank = data.getTank(rowIndex);
-                    if(tank instanceof LightTank) {
-                        return ((LightTank) tank).getViewRange();
-                    }else return "-";
+                Tank tank = data.getTank(rowIndex);
+                if(tank instanceof HeavyTank) {
+                    return ((HeavyTank) tank).getNumberNotBreakouts();
+                }else return "-";
             }
             case 3:{
                 Tank tank = data.getTank(rowIndex);
                 if (tank instanceof HeavyTank){
-                    return ((HeavyTank) tank).getArmorThickness();
+                    return ((HeavyTank) tank).getNumberBreakouts();
                 }else return "-";
             }
         }
         return "default";
     }
 
-    public void deleteTank(int index){
-        this.data.remove(index);
+    public void useAbilityTanks(){
+        data.performAbilityAllTanks();
         fireTableDataChanged();
     }
 }

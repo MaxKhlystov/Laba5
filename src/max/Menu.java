@@ -1,4 +1,4 @@
-package max;
+/*package max;
 
 
 import java.util.Scanner;
@@ -121,4 +121,4 @@ public class Menu {
             System.out.println("Танка " + nameToRemove + " нет на поле боя.");
         }
     }
-}
+}*/

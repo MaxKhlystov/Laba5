@@ -20,15 +20,22 @@ public class HeavyTank extends Tank {
         this.armorThickness = armorThickness;
     }
 
+    public int getNumberBreakouts(){
+        return numberBreakouts;
+    }
+
+    public int getNumberNotBreakouts(){
+        return numberNotBreakouts;
+    }
     public void useAbility(){
         Random random = new Random();
         int projectileCaliber = random.nextInt((armorThickness+(armorThickness/2)) + 1 - (armorThickness-(armorThickness/2))) + (armorThickness-(armorThickness/2));
         if (armorThickness>=projectileCaliber) {
-            System.out.println(this.getName() + " танкует снаряд");
+            //System.out.println(this.getName() + " танкует снаряд");
             numberNotBreakouts+=1;
         }
         else {
-            System.out.println("Броня " + this.getName() + " была пробита");
+            //System.out.println("Броня " + this.getName() + " была пробита");
             numberBreakouts+=1;
         }
     }
