@@ -1,14 +1,17 @@
 package max;
 
+import view.MainWindow;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class WindowAbility extends JFrame {
     private JTable jTable;//отображает данные, но не хранит
     private TableModelAbility myTableModelAbility;
     private JButton buttonUseAbility;
+    private JButton buttonYes;
+    private JButton buttonNo;
     public WindowAbility(){
         super("Результаты использования возможностей");
         myTableModelAbility = new TableModelAbility(new Battlefield());
@@ -25,6 +28,39 @@ public class WindowAbility extends JFrame {
             }
         });
         jPanelWindowAbility.add(buttonUseAbility);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                JDialog saveDialog = new JDialog(WindowAbility.this, "Сохранение данных", true);
+                saveDialog.setSize(300, 100);
+                saveDialog.setLocationRelativeTo(WindowAbility.this);
+                JPanel writeData = new JPanel();
+                writeData.add(new JLabel("Хотите ли вы сохранить данные?"));
+                JPanel buttonWriteData = new JPanel();
+                buttonYes = new JButton("Да");
+                buttonNo = new JButton("Нет");
+                buttonYes.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Сохранение");
+                    }
+                });
+                buttonNo.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Выход");
+                        saveDialog.dispose();
+                    }
+                });
+                buttonWriteData.add(buttonYes);
+                buttonWriteData.add(buttonNo);
+                saveDialog.add(buttonWriteData, BorderLayout.SOUTH);
+                saveDialog.add(writeData);
+                saveDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+                saveDialog.setVisible(true);
+            }
+        });
         this.add(jPanelWindowAbility, BorderLayout.SOUTH);
         this.add(jScrollPane);//крутить таблицу
         this.pack();

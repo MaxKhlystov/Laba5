@@ -137,6 +137,7 @@ public class MainWindow extends JFrame {
         this.add(buttonPanelMain, BorderLayout.SOUTH);//расположение кнопки внизу
         this.add(jScrollPane);//крутить таблицу
         this.pack();
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);//расположение посередине
         this.setVisible(true);//чтобы выводилось
     }
