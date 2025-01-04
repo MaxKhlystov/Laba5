@@ -13,6 +13,9 @@ import java.awt.event.ActionListener;
 public class MainWindow extends JFrame {
     private JTable jTable;//отображает данные, но не хранит
     private MyTableModel myTableModel;
+    private JTextField NameTankField;
+    private JTextField HPTankField;
+    private JTextField AbilityTankField;
     private JButton buttonDelete;
     private JButton buttonYes;
     private JButton buttonNo;
@@ -20,6 +23,7 @@ public class MainWindow extends JFrame {
     private JButton buttonAd;
     private JButton buttonHeavyTank;
     private JButton buttonLightTank;
+    private JButton buttonOk;
     public MainWindow(){
         super("Наши танки");
         myTableModel = new MyTableModel(new Battlefield());
@@ -40,20 +44,102 @@ public class MainWindow extends JFrame {
                 JPanel messageChoice = new JPanel();
                 JPanel buttonPanelChoice = new JPanel();
                 messageChoice.add(new JLabel("Какой танк вы хотите добавить?"));
-
+                JDialog jDialogAddTank = new JDialog(MainWindow.this,"Добавление танка", true);
+                jDialogAddTank.setSize(400,200);
+                jDialogAddTank.setLocationRelativeTo(MainWindow.this);
                 buttonHeavyTank.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        myTableModel.addHeavyTank();
-                        jDialog.dispose();
+                        JDialog jDialogAddTank = new JDialog(MainWindow.this,"Добавление танка", true);
+                        jDialogAddTank.setSize(500,200);
+                        jDialogAddTank.setLocationRelativeTo(MainWindow.this);
+
+                        JPanel jPanelInputNameTank = new JPanel();
+                        jPanelInputNameTank.add(new JLabel("Введите название танка: "));
+                        NameTankField = new JTextField(20);
+                        jPanelInputNameTank.add(NameTankField);
+
+                        JPanel jPanelInputHPTank = new JPanel();
+                        jPanelInputHPTank.add(new JLabel("Введите кол-во здоровья танка: "));
+                        HPTankField = new JTextField(20);
+                        jPanelInputHPTank.add(HPTankField);
+
+                        JPanel jPanelInputAbilityTank = new JPanel();
+                        jPanelInputAbilityTank.add(new JLabel("Введите толщину брони танка: "));
+                        AbilityTankField = new JTextField(20);
+                        jPanelInputAbilityTank.add(AbilityTankField);
+
+                        JPanel generalPanelAdd = new JPanel();
+                        generalPanelAdd.setLayout(new BoxLayout(generalPanelAdd, BoxLayout.Y_AXIS));
+                        generalPanelAdd.add(jPanelInputNameTank);
+                        generalPanelAdd.add(jPanelInputHPTank);
+                        generalPanelAdd.add(jPanelInputAbilityTank);
+
+                        buttonOk = new JButton("ОК");
+                        buttonOk.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                String TankName = NameTankField.getText();
+                                String HPTankText = HPTankField.getText();
+                                int HPTankInt = Integer.parseInt(HPTankText);
+                                String AbilityTankText = AbilityTankField.getText();
+                                int armorThickness = Integer.parseInt(AbilityTankText);
+                                myTableModel.addHeavyTank(TankName, HPTankInt, armorThickness);
+                                jDialogAddTank.dispose();
+                                jDialog.dispose();
+                            }
+                        });
+                        generalPanelAdd.add(buttonOk);
+                        jDialogAddTank.add(generalPanelAdd);
+                        jDialogAddTank.setVisible(true);
                     }
                 });
 
                 buttonLightTank.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        myTableModel.addLightTank();
-                        jDialog.dispose();
+                        JDialog jDialogAddTank = new JDialog(MainWindow.this,"Добавление танка", true);
+                        jDialogAddTank.setSize(500,200);
+                        jDialogAddTank.setLocationRelativeTo(MainWindow.this);
+
+                        JPanel jPanelInputNameTank = new JPanel();
+                        jPanelInputNameTank.add(new JLabel("Введите название танка: "));
+                        NameTankField = new JTextField(20);
+                        jPanelInputNameTank.add(NameTankField);
+
+                        JPanel jPanelInputHPTank = new JPanel();
+                        jPanelInputHPTank.add(new JLabel("Введите кол-во здоровья танка: "));
+                        HPTankField = new JTextField(20);
+                        jPanelInputHPTank.add(HPTankField);
+
+                        JPanel jPanelInputAbilityTank = new JPanel();
+                        jPanelInputAbilityTank.add(new JLabel("Введите дальность обзора танка: "));
+                        AbilityTankField = new JTextField(20);
+                        jPanelInputAbilityTank.add(AbilityTankField);
+
+                        JPanel generalPanelAdd = new JPanel();
+                        generalPanelAdd.setLayout(new BoxLayout(generalPanelAdd, BoxLayout.Y_AXIS));
+                        generalPanelAdd.add(jPanelInputNameTank);
+                        generalPanelAdd.add(jPanelInputHPTank);
+                        generalPanelAdd.add(jPanelInputAbilityTank);
+
+                        buttonOk = new JButton("ОК");
+                        buttonOk.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                String TankName = NameTankField.getText();
+                                String HPTankText = HPTankField.getText();
+                                int HPTankInt = Integer.parseInt(HPTankText);
+                                String AbilityTankText = AbilityTankField.getText();
+                                int viewRange = Integer.parseInt(AbilityTankText);
+                                myTableModel.addLightTank(TankName, HPTankInt, viewRange);
+                                jDialogAddTank.dispose();
+                                jDialog.dispose();
+                            }
+                        });
+                        generalPanelAdd.add(buttonOk);
+                        jDialogAddTank.add(generalPanelAdd);
+                        jDialogAddTank.setVisible(true);
                     }
                 });
 

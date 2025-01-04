@@ -50,6 +50,7 @@ public class WindowAbility extends JFrame {
                         jDialogSave.setLocationRelativeTo(WindowAbility.this);
                         jDialogSave.setSize(300, 100);
                         jDialogSave.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+
                         JPanel fileNamePanel = new JPanel();
                         fileNamePanel.add(new JLabel("Имя файла для сохранения: "));
                         fileNameField = new JTextField(20);
@@ -57,12 +58,12 @@ public class WindowAbility extends JFrame {
                         jDialogSave.add(fileNamePanel);
                         String fileName = fileNameField.getText();
                         jDialogSave.setVisible(true);
-                        addWindowListener(new WindowAdapter() {
+                        jDialogSave.addWindowListener(new WindowAdapter() {
                             @Override
                             public void windowClosed(WindowEvent e) {
                                 super.windowClosed(e);
-                                saveDialog.dispose();
                                 jDialogSave.dispose();
+                                saveDialog.dispose();
                             }
                         });
                     }

@@ -85,13 +85,13 @@ public class MyTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void addLightTank(){
-        data.addTank(new LightTank("ам13105", 1300, 1000));
+    public void addLightTank(String name, int HP, int viewRange){
+        data.addTank(new LightTank(name, HP, viewRange));
         fireTableDataChanged();
     }
 
-    public void addHeavyTank(){
-        data.addTank(new HeavyTank("Е100", 2700, 500));
+    public void addHeavyTank(String name, int HP, int armorThickness){
+        data.addTank(new HeavyTank(name, HP, armorThickness));
         fireTableDataChanged();
     }
 }
