@@ -57,8 +57,14 @@ public class WindowAbility extends JFrame {
                         jDialogSave.add(fileNamePanel);
                         String fileName = fileNameField.getText();
                         jDialogSave.setVisible(true);
-                        saveDialog.dispose();
-                        dispose();
+                        addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosed(WindowEvent e) {
+                                super.windowClosed(e);
+                                saveDialog.dispose();
+                                jDialogSave.dispose();
+                            }
+                        });
                     }
                 });
                 buttonNo.addActionListener(new ActionListener() {
@@ -71,7 +77,6 @@ public class WindowAbility extends JFrame {
                 buttonWriteData.add(buttonNo);
                 saveDialog.add(buttonWriteData, BorderLayout.SOUTH);
                 saveDialog.add(writeData);
-                saveDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
                 saveDialog.setVisible(true);
             }
         });
