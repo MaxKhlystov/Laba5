@@ -50,6 +50,7 @@ public class MainWindow extends JFrame {
                 buttonHeavyTank.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        jDialog.dispose();
                         JDialog jDialogAddTank = new JDialog(MainWindow.this,"Добавление танка", true);
                         jDialogAddTank.setSize(500,200);
                         jDialogAddTank.setLocationRelativeTo(MainWindow.this);
@@ -79,14 +80,57 @@ public class MainWindow extends JFrame {
                         buttonOk.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                String TankName = NameTankField.getText();
-                                String HPTankText = HPTankField.getText();
-                                int HPTankInt = Integer.parseInt(HPTankText);
-                                String AbilityTankText = AbilityTankField.getText();
-                                int armorThickness = Integer.parseInt(AbilityTankText);
-                                myTableModel.addHeavyTank(TankName, HPTankInt, armorThickness);
-                                jDialogAddTank.dispose();
-                                jDialog.dispose();
+                                try{
+                                    String TankName = NameTankField.getText().trim();
+                                    if (TankName.isEmpty()){
+                                        jDialogAddTank.dispose();
+                                        JDialog jDialogErrorNullName = new JDialog(MainWindow.this, "Ошибка", true);
+                                        jDialogErrorNullName.setSize(400,75);
+                                        jDialogErrorNullName.setLocationRelativeTo(MainWindow.this);
+
+                                        JPanel jPanelError = new JPanel();
+                                        jPanelError.add(new JLabel("Ошибка: У танка должно быть название."));
+
+                                        JButton buttonErrorOk = new JButton("ОК");
+                                        buttonErrorOk.setSize(30,30);
+
+                                        jPanelError.add(buttonErrorOk);
+                                        buttonErrorOk.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                jDialogErrorNullName.dispose();
+                                            }
+                                        });
+                                        jDialogErrorNullName.add(jPanelError, BorderLayout.NORTH);
+                                        jDialogErrorNullName.setVisible(true);
+                                    }
+                                    String HPTankText = HPTankField.getText().trim();
+                                    int HPTankInt = Integer.parseInt(HPTankText);
+                                    String AbilityTankText = AbilityTankField.getText().trim();
+                                    int armorThickness = Integer.parseInt(AbilityTankText);
+                                    myTableModel.addHeavyTank(TankName, HPTankInt, armorThickness);
+                                    jDialogAddTank.dispose();
+                                }catch(NumberFormatException ex){
+                                    JDialog jDialogError = new JDialog(MainWindow.this, "Ошибка", true);
+                                    jDialogError.setSize(400,75);
+                                    jDialogError.setLocationRelativeTo(MainWindow.this);
+
+                                    JPanel jPanelError = new JPanel();
+                                    jPanelError.add(new JLabel("Ошибка: Вы ввели не число или неверный его формат."));
+
+                                    JButton buttonErrorOk = new JButton("ОК");
+                                    buttonErrorOk.setSize(30,30);
+
+                                    jPanelError.add(buttonErrorOk);
+                                    buttonErrorOk.addActionListener(new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+                                            jDialogError.dispose();
+                                        }
+                                    });
+                                    jDialogError.add(jPanelError, BorderLayout.NORTH);
+                                    jDialogError.setVisible(true);
+                                }
                             }
                         });
                         generalPanelAdd.add(buttonOk);
@@ -98,6 +142,7 @@ public class MainWindow extends JFrame {
                 buttonLightTank.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        jDialog.dispose();
                         JDialog jDialogAddTank = new JDialog(MainWindow.this,"Добавление танка", true);
                         jDialogAddTank.setSize(500,200);
                         jDialogAddTank.setLocationRelativeTo(MainWindow.this);
@@ -127,14 +172,58 @@ public class MainWindow extends JFrame {
                         buttonOk.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                String TankName = NameTankField.getText();
-                                String HPTankText = HPTankField.getText();
-                                int HPTankInt = Integer.parseInt(HPTankText);
-                                String AbilityTankText = AbilityTankField.getText();
-                                int viewRange = Integer.parseInt(AbilityTankText);
-                                myTableModel.addLightTank(TankName, HPTankInt, viewRange);
-                                jDialogAddTank.dispose();
-                                jDialog.dispose();
+                                try {
+                                    String TankName = NameTankField.getText().trim();
+                                    if (TankName.isEmpty()) {
+                                        jDialogAddTank.dispose();
+                                        JDialog jDialogErrorNullName = new JDialog(MainWindow.this, "Ошибка", true);
+                                        jDialogErrorNullName.setSize(400, 75);
+                                        jDialogErrorNullName.setLocationRelativeTo(MainWindow.this);
+
+                                        JPanel jPanelError = new JPanel();
+                                        jPanelError.add(new JLabel("Ошибка: У танка должно быть название."));
+
+                                        JButton buttonErrorOk = new JButton("ОК");
+                                        buttonErrorOk.setSize(30, 30);
+
+                                        jPanelError.add(buttonErrorOk);
+                                        buttonErrorOk.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                jDialogErrorNullName.dispose();
+                                                jDialogAddTank.dispose();
+                                            }
+                                        });
+                                        jDialogErrorNullName.add(jPanelError, BorderLayout.NORTH);
+                                        jDialogErrorNullName.setVisible(true);
+                                    }
+                                    String HPTankText = HPTankField.getText().trim();
+                                    int HPTankInt = Integer.parseInt(HPTankText);
+                                    String AbilityTankText = AbilityTankField.getText().trim();
+                                    int viewRange = Integer.parseInt(AbilityTankText);
+                                    myTableModel.addLightTank(TankName, HPTankInt, viewRange);
+                                    jDialogAddTank.dispose();
+                                }catch(NumberFormatException ex){
+                                    JDialog jDialogError = new JDialog(MainWindow.this, "Ошибка", true);
+                                    jDialogError.setSize(400,75);
+                                    jDialogError.setLocationRelativeTo(MainWindow.this);
+
+                                    JPanel jPanelError = new JPanel();
+                                    jPanelError.add(new JLabel("Ошибка: Вы ввели не число или неверный его формат."));
+
+                                    JButton buttonErrorOk = new JButton("ОК");
+                                    buttonErrorOk.setSize(30,30);
+
+                                    jPanelError.add(buttonErrorOk);
+                                    buttonErrorOk.addActionListener(new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+                                            jDialogError.dispose();
+                                        }
+                                    });
+                                    jDialogError.add(jPanelError, BorderLayout.NORTH);
+                                    jDialogError.setVisible(true);
+                                }
                             }
                         });
                         generalPanelAdd.add(buttonOk);
