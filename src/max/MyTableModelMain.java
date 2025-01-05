@@ -2,10 +2,10 @@ package max;
 
 import javax.swing.table.AbstractTableModel;
 
-public class MyTableModel extends AbstractTableModel {
+public class MyTableModelMain extends AbstractTableModel {
     private Battlefield data;
 
-    public MyTableModel(Battlefield field){
+    public MyTableModelMain(Battlefield field){
         this.data = field;
     }
     @Override

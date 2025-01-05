@@ -3,7 +3,7 @@ package view;
 import javax.swing.*;
 
 import max.Battlefield;
-import max.MyTableModel;
+import max.MyTableModelMain;
 import max.WindowAbility;
 
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class MainWindow extends JFrame {
     private JTable jTable;//отображает данные, но не хранит
-    private MyTableModel myTableModel;
+    private MyTableModelMain myTableModelMain;
     private JTextField NameTankField;
     private JTextField HPTankField;
     private JTextField AbilityTankField;
@@ -26,9 +26,9 @@ public class MainWindow extends JFrame {
     private JButton buttonOk;
     public MainWindow(){
         super("Наши танки");
-        myTableModel = new MyTableModel(new Battlefield());
+        myTableModelMain = new MyTableModelMain(new Battlefield());
         jTable = new JTable();
-        jTable.setModel(myTableModel);
+        jTable.setModel(myTableModelMain);
         JScrollPane jScrollPane = new JScrollPane(jTable);
         JPanel buttonPanelMain = new JPanel();
         buttonAd = new JButton("Добавить танк");
@@ -103,13 +103,14 @@ public class MainWindow extends JFrame {
                                         });
                                         jDialogErrorNullName.add(jPanelError, BorderLayout.NORTH);
                                         jDialogErrorNullName.setVisible(true);
+                                    }else {
+                                        String HPTankText = HPTankField.getText().trim();
+                                        int HPTankInt = Integer.parseInt(HPTankText);
+                                        String AbilityTankText = AbilityTankField.getText().trim();
+                                        int armorThickness = Integer.parseInt(AbilityTankText);
+                                        myTableModelMain.addHeavyTank(TankName, HPTankInt, armorThickness);
+                                        jDialogAddTank.dispose();
                                     }
-                                    String HPTankText = HPTankField.getText().trim();
-                                    int HPTankInt = Integer.parseInt(HPTankText);
-                                    String AbilityTankText = AbilityTankField.getText().trim();
-                                    int armorThickness = Integer.parseInt(AbilityTankText);
-                                    myTableModel.addHeavyTank(TankName, HPTankInt, armorThickness);
-                                    jDialogAddTank.dispose();
                                 }catch(NumberFormatException ex){
                                     JDialog jDialogError = new JDialog(MainWindow.this, "Ошибка", true);
                                     jDialogError.setSize(400,75);
@@ -196,13 +197,14 @@ public class MainWindow extends JFrame {
                                         });
                                         jDialogErrorNullName.add(jPanelError, BorderLayout.NORTH);
                                         jDialogErrorNullName.setVisible(true);
+                                    }else {
+                                        String HPTankText = HPTankField.getText().trim();
+                                        int HPTankInt = Integer.parseInt(HPTankText);
+                                        String AbilityTankText = AbilityTankField.getText().trim();
+                                        int viewRange = Integer.parseInt(AbilityTankText);
+                                        myTableModelMain.addLightTank(TankName, HPTankInt, viewRange);
+                                        jDialogAddTank.dispose();
                                     }
-                                    String HPTankText = HPTankField.getText().trim();
-                                    int HPTankInt = Integer.parseInt(HPTankText);
-                                    String AbilityTankText = AbilityTankField.getText().trim();
-                                    int viewRange = Integer.parseInt(AbilityTankText);
-                                    myTableModel.addLightTank(TankName, HPTankInt, viewRange);
-                                    jDialogAddTank.dispose();
                                 }catch(NumberFormatException ex){
                                     JDialog jDialogError = new JDialog(MainWindow.this, "Ошибка", true);
                                     jDialogError.setSize(400,75);
@@ -266,7 +268,7 @@ public class MainWindow extends JFrame {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             try {
-                                myTableModel.deleteTank(jTable.getSelectedRow());
+                                myTableModelMain.deleteTank(jTable.getSelectedRow());
                                 jDialog.dispose();
                             }catch(ArrayIndexOutOfBoundsException ex){
                             JDialog errorDialog = new JDialog(MainWindow.this, "Ошибка", true);
