@@ -83,7 +83,6 @@ public class MainWindow extends JFrame {
                                 try{
                                     String TankName = NameTankField.getText().trim();
                                     if (TankName.isEmpty()){
-                                        jDialogAddTank.dispose();
                                         JDialog jDialogErrorNullName = new JDialog(MainWindow.this, "Ошибка", true);
                                         jDialogErrorNullName.setSize(400,75);
                                         jDialogErrorNullName.setLocationRelativeTo(MainWindow.this);
@@ -192,7 +191,6 @@ public class MainWindow extends JFrame {
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
                                                 jDialogErrorNullName.dispose();
-                                                jDialogAddTank.dispose();
                                             }
                                         });
                                         jDialogErrorNullName.add(jPanelError, BorderLayout.NORTH);
