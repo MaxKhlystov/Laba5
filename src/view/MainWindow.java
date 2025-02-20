@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
 
 import max.Battlefield;
 import max.MyTableModelMain;
@@ -24,6 +25,9 @@ public class MainWindow extends JFrame {
     private JButton buttonHeavyTank;
     private JButton buttonLightTank;
     private JButton buttonOk;
+    private JButton buttonLightTheme;
+    private JButton buttonBlackTheme;
+    private JTableHeader tableHeader;
     public MainWindow(){
         super("Наши танки");
         myTableModelMain = new MyTableModelMain(new Battlefield());
@@ -31,6 +35,63 @@ public class MainWindow extends JFrame {
         jTable.setModel(myTableModelMain);
         JScrollPane jScrollPane = new JScrollPane(jTable);
         JPanel buttonPanelMain = new JPanel();
+
+        JPanel buttonPanelTheme = new JPanel();
+        tableHeader = jTable.getTableHeader();
+        buttonBlackTheme = new JButton("Тёмная тема");
+        buttonBlackTheme.setSize(30,30);
+
+        buttonBlackTheme.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buttonAd.setBackground(Color.DARK_GRAY);
+                buttonAd.setForeground(Color.WHITE);
+                buttonAbility.setBackground(Color.DARK_GRAY);
+                buttonAbility.setForeground(Color.WHITE);
+                buttonDelete.setBackground(Color.DARK_GRAY);
+                buttonDelete.setForeground(Color.WHITE);
+                buttonLightTheme.setBackground(Color.DARK_GRAY);
+                buttonLightTheme.setForeground(Color.WHITE);
+                buttonPanelMain.setBackground(Color.GRAY);
+                buttonPanelTheme.setBackground(Color.GRAY);
+                jTable.setBackground(Color.DARK_GRAY);
+                jTable.setForeground(Color.WHITE);
+                tableHeader.setBackground(Color.DARK_GRAY);
+                tableHeader.setForeground(Color.WHITE);
+
+                buttonBlackTheme.setVisible(false);
+
+                buttonPanelTheme.add(buttonLightTheme, BorderLayout.WEST);
+                buttonLightTheme.setVisible(true);
+            }
+        });
+
+        buttonLightTheme = new JButton("Светлая тема");
+        buttonLightTheme.setSize(30,30);
+        buttonLightTheme.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buttonAd.setBackground(null);
+                buttonAd.setForeground(null);
+                buttonAbility.setBackground(null);
+                buttonAbility.setForeground(null);
+                buttonDelete.setBackground(null);
+                buttonDelete.setForeground(null);
+                buttonPanelMain.setBackground(null);
+                buttonPanelTheme.setBackground(null);
+                jTable.setBackground(null);
+                jTable.setForeground(null);
+                tableHeader.setBackground(null);
+                tableHeader.setForeground(null);
+                jScrollPane.setBackground(null);
+
+                buttonLightTheme.setVisible(false);
+                buttonBlackTheme.setVisible(true);
+            }
+        });
+        buttonPanelTheme.add(buttonBlackTheme, BorderLayout.WEST);
+        this.add(buttonPanelTheme, BorderLayout.NORTH);
+
         buttonAd = new JButton("Добавить танк");
         buttonAd.setSize(30,30);
         buttonAd.addActionListener(new ActionListener() {
