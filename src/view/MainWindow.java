@@ -33,17 +33,20 @@ public class MainWindow extends JFrame {
     private JDialog jDialogAddTank;
     private JPanel JPanelButtons;
     private JCheckBoxMenuItem menuItemFile3;
+    private JButton addTankButton, deleteTankButton, abilityTankButton, saveDataButton, readDataButton;
+    private JCheckBox editModeCheckBox;
 
     public MainWindow(){
         super("Наши танки");
+
         madeMenu();
         myTableModelMain = new MyTableModelMain(field); // Создаем модель
         jTable = new JTable();
         jTable.setModel(myTableModelMain);
         JScrollPane jScrollPane = new JScrollPane(jTable);
-        JPanelButtons = new JPanel();
+        JPanelButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         addButtons();
-        this.add(JPanelButtons);
+        this.add(JPanelButtons, BorderLayout.SOUTH);
         this.add(jScrollPane);//крутить таблицу
         this.pack();
         SetFont();
@@ -51,8 +54,50 @@ public class MainWindow extends JFrame {
         this.setLocationRelativeTo(null);//расположение посередине
         this.setVisible(true);//чтобы выводилось
     }
-    private void addButtons(){
+    private void addButtons() {
+        addTankButton = new JButton("Добавить танк");
+        addTankButton.addActionListener(e -> {
+            menuItemApp2.doClick();
+        });
+        JPanelButtons.add(addTankButton);
 
+        deleteTankButton = new JButton("Удалить танк");
+        deleteTankButton.addActionListener(e -> {
+            menuItemApp1.doClick();
+        });
+        JPanelButtons.add(deleteTankButton);
+
+        abilityTankButton = new JButton("Использовать возможность");
+        abilityTankButton.addActionListener(e -> {
+            menuItemApp3.doClick();
+        });
+        JPanelButtons.add(abilityTankButton);
+
+        saveDataButton = new JButton("Сохранить");
+        saveDataButton.addActionListener(e -> {
+            menuItemFile2.doClick();
+        });
+        JPanelButtons.add(saveDataButton);
+
+        readDataButton = new JButton("Загрузить");
+        readDataButton.addActionListener(e -> {
+            menuItemFile1.doClick();
+        });
+        JPanelButtons.add(readDataButton);
+
+        editModeCheckBox = new JCheckBox("Режим редактирования");
+        editModeCheckBox.addActionListener(e -> {
+            boolean isSelected = editModeCheckBox.isSelected();
+            myTableModelMain.setEditMode(isSelected);
+            menuItemFile3.setSelected(isSelected); // Синхронизация с меню
+            if (isSelected) {
+                JOptionPane.showMessageDialog(MainWindow.this,
+                        "Режим редактирования включен",
+                        "Информация",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        JPanelButtons.add(editModeCheckBox);
     }
     public void ViewErrorDialog(){
         JDialog errorDialog = new JDialog(MainWindow.this, "Ошибка", true);
@@ -87,8 +132,10 @@ public class MainWindow extends JFrame {
         menuItemFile2 = new JMenuItem("Сохранить");
         menuItemFile3 = new JCheckBoxMenuItem("Изменить");
         menuItemFile3.addActionListener(e -> {
-            myTableModelMain.setEditMode(menuItemFile3.isSelected());
-            if (menuItemFile3.isSelected()) {
+            boolean isSelected = menuItemFile3.isSelected();
+            myTableModelMain.setEditMode(isSelected);
+            editModeCheckBox.setSelected(isSelected); // Синхронизация с панелью кнопок
+            if (isSelected) {
                 JOptionPane.showMessageDialog(this,
                         "Режим редактирования включен",
                         "Информация",

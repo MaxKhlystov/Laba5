@@ -1,7 +1,5 @@
 package max;
 
-import view.MainWindow;
-
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
@@ -22,14 +20,15 @@ public class MyTableModelMain extends AbstractTableModel {
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return editMode;
     }
+
     @Override
     public int getRowCount() {
         return data.getCount();
     }
+
     public Tank getTank(int index) {
         return data.getTank(index);
     }
-    
 
     @Override
     public int getColumnCount() {
@@ -37,8 +36,8 @@ public class MyTableModelMain extends AbstractTableModel {
     }
 
     @Override
-    public String getColumnName(int column){
-        switch (column){
+    public String getColumnName(int column) {
+        switch (column) {
             case 0: return "Название";
             case 1: return "Прочность";
             case 2: return "Дальность обзора";
@@ -57,65 +56,90 @@ public class MyTableModelMain extends AbstractTableModel {
         }
     }
 
-        @Override
-        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            Tank tank = data.getTank(rowIndex);
-            try {
-                switch (columnIndex) {
-                    case 0:
-                        tank.setName((String) aValue);
-                        break;
-                    case 1:
-                        tank.setHPTank(Integer.parseInt(aValue.toString()));
-                        break;
-                    case 2:
-                        if (tank instanceof LightTank) {
-                            ((LightTank) tank).setViewRange(Integer.parseInt(aValue.toString()));
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        Tank tank = data.getTank(rowIndex);
+        try {
+            switch (columnIndex) {
+                case 0:
+                    // Проверка на пустое название
+                    String newName = ((String) aValue).trim();
+                    if (newName.isEmpty()) {
+                        JOptionPane.showMessageDialog(null,
+                                "Название танка не может быть пустым!",
+                                "Ошибка",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    tank.setName(newName);
+                    break;
+                case 1:
+                    int hp = Integer.parseInt(aValue.toString());
+                    if (hp <= 0) {
+                        throw new NumberFormatException("Прочность должна быть положительным числом");
+                    }
+                    tank.setHPTank(hp);
+                    break;
+                case 2:
+                    if (tank instanceof LightTank) {
+                        int viewRange = Integer.parseInt(aValue.toString());
+                        if (viewRange <= 0) {
+                            throw new NumberFormatException("Дальность обзора должна быть положительным числом");
                         }
-                        break;
-                    case 3:
-                        if (tank instanceof HeavyTank) {
-                            ((HeavyTank) tank).setArmorThickness(Integer.parseInt(aValue.toString()));
+                        ((LightTank) tank).setViewRange(viewRange);
+                    }
+                    break;
+                case 3:
+                    if (tank instanceof HeavyTank) {
+                        int armor = Integer.parseInt(aValue.toString());
+                        if (armor <= 0) {
+                            throw new NumberFormatException("Толщина брони должна быть положительным числом");
                         }
-                        break;
-                }
-                fireTableCellUpdated(rowIndex, columnIndex);
-            } catch (NumberFormatException e) {
-
+                        ((HeavyTank) tank).setArmorThickness(armor);
+                    }
+                    break;
             }
+            fireTableCellUpdated(rowIndex, columnIndex);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    e.getMessage(),
+                    "Ошибка ввода",
+                    JOptionPane.ERROR_MESSAGE);
         }
+    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (columnIndex){
+        switch (columnIndex) {
             case 0: return data.getTank(rowIndex).getName();
             case 1: return data.getTank(rowIndex).getHPTank();
             case 2: {
                 Tank tank = data.getTank(rowIndex);
                 if(tank instanceof LightTank) {
                     return ((LightTank) tank).getViewRange();
-                }else return "-";
+                } else return "-";
             }
-            case 3:{
+            case 3: {
                 Tank tank = data.getTank(rowIndex);
-                if (tank instanceof HeavyTank){
+                if (tank instanceof HeavyTank) {
                     return ((HeavyTank) tank).getArmorThickness();
-                }else return "-";
+                } else return "-";
             }
         }
         return "default";
     }
 
-    public void deleteTank(int index){
+    public void deleteTank(int index) {
         this.data.remove(index);
         fireTableDataChanged();
     }
 
-    public void addLightTank(String name, int HP, int viewRange){
+    public void addLightTank(String name, int HP, int viewRange) {
         data.addTank(new LightTank(name, HP, viewRange));
         fireTableDataChanged();
     }
 
-    public void addHeavyTank(String name, int HP, int armorThickness){
+    public void addHeavyTank(String name, int HP, int armorThickness) {
         data.addTank(new HeavyTank(name, HP, armorThickness));
         fireTableDataChanged();
     }
