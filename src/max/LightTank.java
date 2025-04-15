@@ -3,6 +3,7 @@ package max;
 import java.util.Random;
 
 public class LightTank extends Tank {
+    private static final long serialVersionUID = 1L;
     private int viewRange;
     private String classTank = "Лёгкий танк";
     private int numberDetectedEnemies=0;
@@ -33,11 +34,5 @@ public class LightTank extends Tank {
         } else {
             return "Танк " + getName() + " никого не нашёл!";
         }
-    }
-
-    public String toString(){
-        String descriptionTank = ("Класс танка: " + classTank + ", название танка: " + this.getName() + ", кол-во очков прочности: " + this.getHPTank() +
-                ", дальность обзора: " + this.getViewRange() + " кол-во обнаруженных противников: " + numberDetectedEnemies);
-        return descriptionTank;
     }
 }

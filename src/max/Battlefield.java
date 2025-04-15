@@ -1,10 +1,11 @@
 package max;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class Battlefield {
+public class Battlefield implements Serializable {
+    private static final long serialVersionUID = 1L;
     private List<Tank> tanks = new ArrayList();
 
     public Battlefield(){
@@ -43,6 +44,13 @@ public class Battlefield {
 
     public Tank getTank(int index) {
         return tanks.get(index);
+    }
+
+    public List<Tank> getTanks() {
+        if (tanks == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(tanks);
     }
 
     public void remove(int index) {

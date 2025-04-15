@@ -1,8 +1,10 @@
 package max;
+import java.io.Serializable;
 
-public abstract class Tank {
+public abstract class Tank implements Serializable{
     private String name;
     private int HP;
+    private static final long serialVersionUID = 1L;
 
     public Tank(String name, int HP){
         this.name=name;

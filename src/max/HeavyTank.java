@@ -3,6 +3,7 @@ package max;
 import java.util.Random;
 
 public class HeavyTank extends Tank {
+    private static final long serialVersionUID = 1L;
     private int armorThickness;
     private String classTank = "Тяжёлый танк";
     private int numberBreakouts;
@@ -37,11 +38,5 @@ public class HeavyTank extends Tank {
             numberBreakouts += 1;
             return "Танк " + getName() + " получил пробитие!";
         }
-    }
-
-    public String toString(){
-        String descriptionTank = ("Класс танка: " + classTank + ", название танка: " + this.getName() + ", кол-во очков прочности: " + this.getHPTank()+
-                ", имеющий толщину брони: " + this.getArmorThickness() + ", получил пробитий: " + numberBreakouts + " и непробитий: " + numberNotBreakouts);
-        return descriptionTank;
     }
 }

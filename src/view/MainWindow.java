@@ -9,40 +9,41 @@ import max.MyTableModelMain;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 
 public class MainWindow extends JFrame {
     private Battlefield field = new Battlefield();
     private JTable jTable;//отображает данные, но не хранит
     private MyTableModelMain myTableModelMain;
     private JMenuBar menuBar;
-    private JMenu menuFile;
-    private JMenu menuAbout;
-    private JMenu menuApp;
+    private JMenu menuFile, menuAbout, menuApp;
     private JMenuItem menuItemAbout1, menuItemAbout2;;
     private JMenuItem menuItemFile1, menuItemFile2;
-    private JTextField NameTankField;
-    private JTextField HPTankField;
-    private JTextField AbilityTankField;
-    private JButton buttonHeavyTank;
-    private JButton buttonLightTank;
+    private JTextField NameTankField, HPTankField, AbilityTankField;
+    private JButton buttonHeavyTank, buttonLightTank;
     private JButton buttonOk;
     private JMenuItem menuItemApp1,menuItemApp2, menuItemApp3;
     private boolean hasErrors = false;
-    private JDialog jDialogChoiceType;
-    private JDialog jDialogAddTank;
+    private JDialog jDialogChoiceType, jDialogAddTank;
     private JPanel JPanelButtons;
     private JCheckBoxMenuItem menuItemFile3;
-    private JButton addTankButton, deleteTankButton, abilityTankButton, saveDataButton, readDataButton;
+    private JButton addTankButton, deleteTankButton, abilityTankButton, saveDataButton, readDataButton, exitButton;
     private JCheckBox editModeCheckBox;
+    private JMenuItem menuItemFile4;
+    private JFileChooser fileChooser;
+    private boolean hasUnsavedChanges = false;
 
     public MainWindow(){
         super("Наши танки");
-
         madeMenu();
         myTableModelMain = new MyTableModelMain(field); // Создаем модель
         jTable = new JTable();
         jTable.setModel(myTableModelMain);
+        jTable.getModel().addTableModelListener(e -> {
+            if (isEditModeEnabled()) {
+                hasUnsavedChanges = true;
+            }
+        });
         JScrollPane jScrollPane = new JScrollPane(jTable);
         JPanelButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         addButtons();
@@ -85,6 +86,12 @@ public class MainWindow extends JFrame {
         });
         JPanelButtons.add(readDataButton);
 
+        exitButton = new JButton("Выход");
+        exitButton.addActionListener(e -> {
+            menuItemFile4.doClick();
+        });
+        JPanelButtons.add(exitButton);
+
         editModeCheckBox = new JCheckBox("Режим редактирования");
         editModeCheckBox.addActionListener(e -> {
             boolean isSelected = editModeCheckBox.isSelected();
@@ -99,7 +106,7 @@ public class MainWindow extends JFrame {
         });
         JPanelButtons.add(editModeCheckBox);
     }
-    public void ViewErrorDialog(){
+    private void ViewErrorDialog(){
         JDialog errorDialog = new JDialog(MainWindow.this, "Ошибка", true);
         errorDialog.setSize(300, 100);
         errorDialog.setLocationRelativeTo(MainWindow.this);
@@ -131,17 +138,7 @@ public class MainWindow extends JFrame {
         menuItemFile1 = new JMenuItem("Открыть");
         menuItemFile2 = new JMenuItem("Сохранить");
         menuItemFile3 = new JCheckBoxMenuItem("Изменить");
-        menuItemFile3.addActionListener(e -> {
-            boolean isSelected = menuItemFile3.isSelected();
-            myTableModelMain.setEditMode(isSelected);
-            editModeCheckBox.setSelected(isSelected); // Синхронизация с панелью кнопок
-            if (isSelected) {
-                JOptionPane.showMessageDialog(this,
-                        "Режим редактирования включен",
-                        "Информация",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+        menuItemFile4 = new JMenuItem("Выход");
 
         menuApp = new JMenu("Работа с данными");
         menuItemApp1 = new JMenuItem("Удалить танк");
@@ -159,6 +156,7 @@ public class MainWindow extends JFrame {
         menuFile.add(menuItemFile1);
         menuFile.add(menuItemFile2);
         menuFile.add(menuItemFile3);
+        menuFile.add(menuItemFile4);
         menuAbout.add(menuItemAbout1);
         menuAbout.add(menuItemAbout2);
         menuBar.add(menuFile);
@@ -166,10 +164,79 @@ public class MainWindow extends JFrame {
         menuBar.add(menuAbout);
         this.setJMenuBar(menuBar);
     }
-    public boolean isEditModeEnabled() {
+    private boolean isEditModeEnabled() {
         return menuItemFile3 != null && menuItemFile3.isSelected();
     }
     private void setMenuUse() {
+        menuItemFile4.addActionListener(e -> {
+            if (hasUnsavedChanges) {
+                int choice = JOptionPane.showConfirmDialog(
+                        MainWindow.this,
+                        "У вас есть несохраненные изменения. Сохранить перед выходом?",
+                        "Подтверждение",
+                        JOptionPane.YES_NO_CANCEL_OPTION
+                );
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    saveFile();
+                } else if (choice == JOptionPane.CANCEL_OPTION) {
+                    return; // Отменяем выход
+                }
+            }
+            int confirm = JOptionPane.showConfirmDialog(
+                    MainWindow.this,
+                    "Вы действительно хотите выйти?",
+                    "Подтверждение выхода",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
+        });
+
+        menuItemFile3.addActionListener(e -> {
+            boolean isSelected = menuItemFile3.isSelected();
+            if (!isSelected && hasUnsavedChanges) {
+                int choice = JOptionPane.showConfirmDialog(
+                        MainWindow.this,
+                        "У вас есть несохраненные изменения. Сохранить перед выходом?",
+                        "Подтверждение",
+                        JOptionPane.YES_NO_CANCEL_OPTION
+                );
+                if (choice == JOptionPane.YES_OPTION) {
+                    saveFile();
+                    hasUnsavedChanges = false;
+                } else if (choice == JOptionPane.CANCEL_OPTION) {
+                    // Отменяем выход из режима редактирования
+                    menuItemFile3.setSelected(true);
+                    editModeCheckBox.setSelected(true);
+                    return;
+                } else {
+                    // NO_OPTION - просто сбрасываем флаг
+                    hasUnsavedChanges = false;
+                }
+            }
+            myTableModelMain.setEditMode(isSelected);
+            editModeCheckBox.setSelected(isSelected);
+            if (isSelected) {
+                JOptionPane.showMessageDialog(this,
+                        "Режим редактирования включен",
+                        "Информация",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        menuItemFile2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    saveFile();
+                }
+        });
+        menuItemFile1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openFile();
+            }
+        });
         menuItemAbout1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -220,54 +287,91 @@ public class MainWindow extends JFrame {
                 aboutApplication.setVisible(true);
             }
         });
-
         removeTank();
         addTank();
         useAbility();
     }
-    private void openFile(){
-        menuItemFile1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Открытие файла данных");
+    private void saveDataToFile(File file) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(field);
+            JOptionPane.showMessageDialog(
+                    MainWindow.this,
+                    "Данные успешно сохранены в файл: " + file.getName(),
+                    "Сохранение завершено",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(
+                    MainWindow.this,
+                    "Ошибка при сохранении данных: " + ex.getMessage(),
+                    "Ошибка сохранения",
+                    JOptionPane.ERROR_MESSAGE
+            );
+           // if(MODE == "DEVELOP"){
+                ex.printStackTrace();
+            //}
+        }
+    }
+    private void openFile() {
+        fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Открытие файла данных");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Файлы данных (*.dat)", "dat"));
 
-                // Установка фильтра для файлов (например, .txt или .dat)
-                fileChooser.setFileFilter(new FileNameExtensionFilter(
-                        "Текстовые файлы (*.txt)", "txt"));
+        int userSelection = fileChooser.showOpenDialog(MainWindow.this);
 
-                int userSelection = fileChooser.showOpenDialog(MainWindow.this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(selectedFile))) {
+                // Читаем объект Battlefield из файла
+                Battlefield loadedField = (Battlefield) ois.readObject();
 
-                if (userSelection == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    try {
-                        // Здесь должна быть ваша логика загрузки данных из файла
-                        // Например:
-                        // Battlefield loadedData = loadDataFromFile(selectedFile);
-                        // model = new MyTableModelMain(loadedData);
-                        // table.setModel(model);
+                // Обновляем текущее поле и модель таблицы
+                this.field = loadedField;
+                this.myTableModelMain = new MyTableModelMain(loadedField);
+                jTable.setModel(myTableModelMain);
 
-                        JOptionPane.showMessageDialog(MainWindow.this,
-                                "Файл " + selectedFile.getName() + " успешно открыт",
-                                "Информация",
-                                JOptionPane.INFORMATION_MESSAGE);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(MainWindow.this,
-                                "Ошибка при открытии файла: " + ex.getMessage(),
-                                "Ошибка",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                JOptionPane.showMessageDialog(
+                        MainWindow.this,
+                        "Данные успешно загружены из файла: " + selectedFile.getName(),
+                        "Загрузка завершена",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (IOException | ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(
+                        MainWindow.this,
+                        "Ошибка при загрузке данных: " + ex.getMessage(),
+                        "Ошибка загрузки",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                ex.printStackTrace();
+            }
+        }
+    }
+    private void saveFile() {
+        fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Сохранить файл данных");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Файлы данных (*.dat)", "dat"));
+        fileChooser.setSelectedFile(new File("tanks.dat"));
+        int userSelection = fileChooser.showSaveDialog(MainWindow.this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            if (!fileToSave.getName().toLowerCase().endsWith(".dat")) {
+                fileToSave = new File(fileToSave.getParentFile(), fileToSave.getName() + ".dat");
+            }
+            if (fileToSave.exists()) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        MainWindow.this,
+                        "Файл уже существует. Перезаписать?",
+                        "Подтверждение",
+                        JOptionPane.YES_NO_OPTION
+                );
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
                 }
             }
-        });
-    }
-    private void saveFile(){
-        menuItemFile2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
+            saveDataToFile(fileToSave);
+            hasUnsavedChanges = false;
+        }
     }
     private void removeTank(){
         menuItemApp1.addActionListener(new ActionListener() {
