@@ -9,6 +9,8 @@ import max.MyTableModelMain;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 
 public class MainWindow extends JFrame {
@@ -32,6 +34,8 @@ public class MainWindow extends JFrame {
     private JMenuItem menuItemFile4;
     private JFileChooser fileChooser;
     private boolean hasUnsavedChanges = false;
+    private int numNewTanks=0;
+    private int numDeleteTanks=0;
 
     public MainWindow(){
         super("Наши танки");
@@ -51,10 +55,17 @@ public class MainWindow extends JFrame {
         this.add(jScrollPane);//крутить таблицу
         this.pack();
         SetFont();
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                menuItemFile4.doClick();
+            }
+        });
         this.setLocationRelativeTo(null);//расположение посередине
         this.setVisible(true);//чтобы выводилось
     }
+
     private void addButtons() {
         addTankButton = new JButton("Добавить танк");
         addTankButton.addActionListener(e -> {
@@ -94,15 +105,7 @@ public class MainWindow extends JFrame {
 
         editModeCheckBox = new JCheckBox("Режим редактирования");
         editModeCheckBox.addActionListener(e -> {
-            boolean isSelected = editModeCheckBox.isSelected();
-            myTableModelMain.setEditMode(isSelected);
-            menuItemFile3.setSelected(isSelected); // Синхронизация с меню
-            if (isSelected) {
-                JOptionPane.showMessageDialog(MainWindow.this,
-                        "Режим редактирования включен",
-                        "Информация",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
+            menuItemFile3.doClick();
         });
         JPanelButtons.add(editModeCheckBox);
     }
@@ -169,18 +172,23 @@ public class MainWindow extends JFrame {
     }
     private void setMenuUse() {
         menuItemFile4.addActionListener(e -> {
-            if (hasUnsavedChanges) {
+            if (hasUnsavedChanges || numNewTanks !=0 || numDeleteTanks!=0) {
                 int choice = JOptionPane.showConfirmDialog(
                         MainWindow.this,
                         "У вас есть несохраненные изменения. Сохранить перед выходом?",
                         "Подтверждение",
                         JOptionPane.YES_NO_CANCEL_OPTION
                 );
-
                 if (choice == JOptionPane.YES_OPTION) {
                     saveFile();
+                    hasUnsavedChanges = false;
                 } else if (choice == JOptionPane.CANCEL_OPTION) {
-                    return; // Отменяем выход
+                    // Отменяем выход из режима редактирования
+                    menuItemFile3.setSelected(true);
+                    editModeCheckBox.setSelected(true);
+                    return;
+                } else {
+                    hasUnsavedChanges = false;
                 }
             }
             int confirm = JOptionPane.showConfirmDialog(
@@ -212,7 +220,6 @@ public class MainWindow extends JFrame {
                     editModeCheckBox.setSelected(true);
                     return;
                 } else {
-                    // NO_OPTION - просто сбрасываем флаг
                     hasUnsavedChanges = false;
                 }
             }
@@ -379,6 +386,7 @@ public class MainWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     myTableModelMain.deleteTank(jTable.getSelectedRow());
+                    numDeleteTanks+=1;
                 }catch(IndexOutOfBoundsException ex){
                     ViewErrorDialog();
                 }
@@ -451,13 +459,8 @@ public class MainWindow extends JFrame {
                             String name = NameTankField.getText().trim();
                             int hp = Integer.parseInt(HPTankField.getText().trim());
                             int ability = Integer.parseInt(AbilityTankField.getText().trim());
-
-                            if (buttonHeavyTank.isEnabled()) {
-                                myTableModelMain.addHeavyTank(name, hp, ability);
-                            } else {
-                                myTableModelMain.addLightTank(name, hp, ability);
-                            }
-
+                            myTableModelMain.addLightTank(name, hp, ability);
+                            numNewTanks +=1;
                             jDialogAddTank.dispose();
                         } catch (Exception ex) {
                             JOptionPane.showMessageDialog(jDialogAddTank,
@@ -508,18 +511,12 @@ public class MainWindow extends JFrame {
                         if (hasErrors) {
                             return;
                         }
-
                         try {
                             String name = NameTankField.getText().trim();
                             int hp = Integer.parseInt(HPTankField.getText().trim());
                             int ability = Integer.parseInt(AbilityTankField.getText().trim());
-
-                            if (buttonHeavyTank.isEnabled()) {
-                                myTableModelMain.addHeavyTank(name, hp, ability);
-                            } else {
-                                myTableModelMain.addLightTank(name, hp, ability);
-                            }
-
+                            myTableModelMain.addHeavyTank(name, hp, ability);
+                            numNewTanks +=1;
                             jDialogAddTank.dispose();
                         } catch (Exception ex) {
                             JOptionPane.showMessageDialog(jDialogAddTank,
