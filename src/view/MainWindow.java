@@ -54,6 +54,7 @@ public class MainWindow extends JFrame {
         this.add(JPanelButtons, BorderLayout.SOUTH);
         this.add(jScrollPane);//крутить таблицу
         this.pack();
+        this.setSize(950,600);
         SetFont();
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
