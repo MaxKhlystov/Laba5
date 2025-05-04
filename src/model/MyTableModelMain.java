@@ -1,4 +1,4 @@
-package max;
+package model;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;

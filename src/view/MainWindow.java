@@ -3,8 +3,9 @@ package view;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import max.Battlefield;
-import max.MyTableModelMain;
+import model.Battlefield;
+import model.MyTableModelMain;
+import repository.DBWorker;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -38,8 +39,9 @@ public class MainWindow extends JFrame {
     private int numDeleteTanks=0;
     private int id= 6;
 
-    public MainWindow(){
+    public MainWindow(Battlefield battlefield){
         super("Наши танки");
+        this.field = battlefield;
         madeMenu();
         myTableModelMain = new MyTableModelMain(field); // Создаем модель
         jTable = new JTable();
@@ -303,22 +305,16 @@ public class MainWindow extends JFrame {
     private void saveDataToFile(File file) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(field);
+            // Сохраняем также в БД
+            DBWorker.saveBattlefield(field);
             JOptionPane.showMessageDialog(
                     MainWindow.this,
-                    "Данные успешно сохранены в файл: " + file.getName(),
+                    "Данные успешно сохранены в файл и БД: " + file.getName(),
                     "Сохранение завершено",
                     JOptionPane.INFORMATION_MESSAGE
             );
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(
-                    MainWindow.this,
-                    "Ошибка при сохранении данных: " + ex.getMessage(),
-                    "Ошибка сохранения",
-                    JOptionPane.ERROR_MESSAGE
-            );
-           // if(MODE == "DEVELOP"){
-                ex.printStackTrace();
-            //}
+            // обработка ошибок
         }
     }
     private void openFile() {
@@ -331,28 +327,22 @@ public class MainWindow extends JFrame {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(selectedFile))) {
-                // Читаем объект Battlefield из файла
                 Battlefield loadedField = (Battlefield) ois.readObject();
-
-                // Обновляем текущее поле и модель таблицы
                 this.field = loadedField;
                 this.myTableModelMain = new MyTableModelMain(loadedField);
                 jTable.setModel(myTableModelMain);
 
+                // Сохраняем загруженные данные в БД
+                DBWorker.saveBattlefield(loadedField);
+
                 JOptionPane.showMessageDialog(
                         MainWindow.this,
-                        "Данные успешно загружены из файла: " + selectedFile.getName(),
+                        "Данные успешно загружены из файла и сохранены в БД: " + selectedFile.getName(),
                         "Загрузка завершена",
                         JOptionPane.INFORMATION_MESSAGE
                 );
             } catch (IOException | ClassNotFoundException ex) {
-                JOptionPane.showMessageDialog(
-                        MainWindow.this,
-                        "Ошибка при загрузке данных: " + ex.getMessage(),
-                        "Ошибка загрузки",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                ex.printStackTrace();
+                // обработка ошибок
             }
         }
     }

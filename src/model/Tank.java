@@ -1,4 +1,4 @@
-package max;
+package model;
 import java.io.Serializable;
 
 public abstract class  Tank implements Serializable{
