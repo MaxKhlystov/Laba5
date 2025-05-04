@@ -9,12 +9,12 @@ public class Battlefield implements Serializable {
     private List<Tank> tanks = new ArrayList();
 
     public Battlefield(){
-        this.tanks.add(new LightTank("т100лт", 1500, 400));
-        this.tanks.add(new HeavyTank("ис7", 2100, 350));
-        this.tanks.add(new HeavyTank("ис4", 2500, 450));
-        this.tanks.add(new HeavyTank("ис8", 1800, 300));
-        this.tanks.add(new HeavyTank("кв4", 1600, 250));
-        this.tanks.add(new HeavyTank("ис3", 1500, 200));
+        this.tanks.add(new LightTank(1, "т100лт", 1500, 400));
+        this.tanks.add(new HeavyTank(2, "ис7", 2100, 350));
+        this.tanks.add(new HeavyTank(3, "ис4", 2500, 450));
+        this.tanks.add(new HeavyTank(4, "ис8", 1800, 300));
+        this.tanks.add(new HeavyTank(5, "кв4", 1600, 250));
+        this.tanks.add(new HeavyTank(6, "ис3", 1500, 200));
     }
 
     public void addTank(Tank tank) {
@@ -48,7 +48,7 @@ public class Battlefield implements Serializable {
 
     public List<Tank> getTanks() {
         if (tanks == null) {
-            return new ArrayList<>();
+            tanks =new ArrayList<>();
         }
         return new ArrayList<>(tanks);
     }

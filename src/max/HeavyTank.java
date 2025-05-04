@@ -8,9 +8,13 @@ public class HeavyTank extends Tank {
     private String classTank = "Тяжёлый танк";
     private int numberBreakouts;
     private int numberNotBreakouts;
-    public HeavyTank (String name, int HP, int armorThickness){
-        super(name, HP);
+    public HeavyTank (int id, String name, int HP, int armorThickness){
+        super(id, name, HP);
         this.armorThickness=armorThickness;
+    }
+
+    public String toString(){
+        return getId() + ": " + getName() + ": " + getHPTank() + ": " + getNumberBreakouts() + ": " + getNumberNotBreakouts() + ": ";
     }
 
     public int getArmorThickness(){

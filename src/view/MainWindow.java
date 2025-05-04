@@ -36,6 +36,7 @@ public class MainWindow extends JFrame {
     private boolean hasUnsavedChanges = false;
     private int numNewTanks=0;
     private int numDeleteTanks=0;
+    private int id= 6;
 
     public MainWindow(){
         super("Наши танки");
@@ -460,7 +461,7 @@ public class MainWindow extends JFrame {
                             String name = NameTankField.getText().trim();
                             int hp = Integer.parseInt(HPTankField.getText().trim());
                             int ability = Integer.parseInt(AbilityTankField.getText().trim());
-                            myTableModelMain.addLightTank(name, hp, ability);
+                            myTableModelMain.addLightTank(id+=1, name, hp, ability);
                             numNewTanks +=1;
                             jDialogAddTank.dispose();
                         } catch (Exception ex) {
@@ -516,7 +517,7 @@ public class MainWindow extends JFrame {
                             String name = NameTankField.getText().trim();
                             int hp = Integer.parseInt(HPTankField.getText().trim());
                             int ability = Integer.parseInt(AbilityTankField.getText().trim());
-                            myTableModelMain.addHeavyTank(name, hp, ability);
+                            myTableModelMain.addHeavyTank(id+=1, name, hp, ability);
                             numNewTanks +=1;
                             jDialogAddTank.dispose();
                         } catch (Exception ex) {

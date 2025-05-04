@@ -32,16 +32,17 @@ public class MyTableModelMain extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     @Override
     public String getColumnName(int column) {
         switch (column) {
-            case 0: return "Название";
-            case 1: return "Прочность";
-            case 2: return "Дальность обзора";
-            case 3: return "Толщина брони";
+            case 0: return "ID";
+            case 1: return "Название";
+            case 2: return "Прочность";
+            case 3: return "Дальность обзора";
+            case 4: return "Толщина брони";
         }
         return "";
     }
@@ -49,7 +50,7 @@ public class MyTableModelMain extends AbstractTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         switch(columnIndex) {
-            case 0:
+            case 1:
                 return String.class;
             default:
                 return Integer.class;
@@ -61,7 +62,7 @@ public class MyTableModelMain extends AbstractTableModel {
         Tank tank = data.getTank(rowIndex);
         try {
             switch (columnIndex) {
-                case 0:
+                case 1:
                     // Проверка на пустое название
                     String newName = ((String) aValue).trim();
                     if (newName.isEmpty()) {
@@ -73,14 +74,14 @@ public class MyTableModelMain extends AbstractTableModel {
                     }
                     tank.setName(newName);
                     break;
-                case 1:
+                case 2:
                     int hp = Integer.parseInt(aValue.toString());
                     if (hp <= 0) {
                         throw new NumberFormatException("Прочность должна быть положительным числом");
                     }
                     tank.setHPTank(hp);
                     break;
-                case 2:
+                case 3:
                     if (tank instanceof LightTank) {
                         int viewRange = Integer.parseInt(aValue.toString());
                         if (viewRange <= 0) {
@@ -89,7 +90,7 @@ public class MyTableModelMain extends AbstractTableModel {
                         ((LightTank) tank).setViewRange(viewRange);
                     }
                     break;
-                case 3:
+                case 4:
                     if (tank instanceof HeavyTank) {
                         int armor = Integer.parseInt(aValue.toString());
                         if (armor <= 0) {
@@ -111,15 +112,16 @@ public class MyTableModelMain extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
-            case 0: return data.getTank(rowIndex).getName();
-            case 1: return data.getTank(rowIndex).getHPTank();
-            case 2: {
+            case 0: return data.getTank(rowIndex).getId();
+            case 1: return data.getTank(rowIndex).getName();
+            case 2: return data.getTank(rowIndex).getHPTank();
+            case 3: {
                 Tank tank = data.getTank(rowIndex);
                 if(tank instanceof LightTank) {
                     return ((LightTank) tank).getViewRange();
                 } else return "-";
             }
-            case 3: {
+            case 4: {
                 Tank tank = data.getTank(rowIndex);
                 if (tank instanceof HeavyTank) {
                     return ((HeavyTank) tank).getArmorThickness();
@@ -134,13 +136,13 @@ public class MyTableModelMain extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public void addLightTank(String name, int HP, int viewRange) {
-        data.addTank(new LightTank(name, HP, viewRange));
+    public void addLightTank(int id, String name, int HP, int viewRange) {
+        data.addTank(new LightTank(id, name, HP, viewRange));
         fireTableDataChanged();
     }
 
-    public void addHeavyTank(String name, int HP, int armorThickness) {
-        data.addTank(new HeavyTank(name, HP, armorThickness));
+    public void addHeavyTank(int id, String name, int HP, int armorThickness) {
+        data.addTank(new HeavyTank(id, name, HP, armorThickness));
         fireTableDataChanged();
     }
 }

@@ -8,9 +8,13 @@ public class LightTank extends Tank {
     private String classTank = "Лёгкий танк";
     private int numberDetectedEnemies=0;
 
-    public LightTank (String name, int HP, int viewRange){
-        super(name, HP);
+    public LightTank (int id, String name, int HP, int viewRange){
+        super(id, name, HP);
         this.viewRange=viewRange;
+    }
+
+    public String toString(){
+        return getId() + ": " + getName() + ": " + getHPTank() + ": " + getViewRange() + ": ";
     }
 
     public int getViewRange(){
